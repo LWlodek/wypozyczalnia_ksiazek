@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    .home-container {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+    }
+</style>
+
+<div class="home-container">
+    <div>
+        <h3>ABC</h3>
+        <hr>
+    </div>
+
+    <div>
+        <a href="http://127.0.0.1:8000/rent">Ksiazki</a>
+        {% for book in books %}
+        <div>
+            <h5>{{book.id}} -- {{book.name}}</h5>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}
