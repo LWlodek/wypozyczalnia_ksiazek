@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
+
 from django.contrib import messages
 
 books = [
@@ -10,11 +12,16 @@ books = [
     {'id': 3, 'name': 'Panowie tadeusz'},
 ]
 
+
 def loginPage(request):
+    page = 'login'
+    if request.user.is_authenticated:
+        return redirect('home')
+
     if request.method == "POST":
         username = request.POST.get('username').lower()
         password = request.POST.get('password')
-
+        #tutaj na maila podmianka
         try:
             user = User.objects.get(username=username)
         except:
@@ -28,17 +35,36 @@ def loginPage(request):
         else:
             messages.error(request, 'Username or Password does not exist')
 
-    context = {}
+    context = {'page': page}
     return render(request, 'base/login_register.html', context)
+
 
 def logoutUser(request):
     logout(request)
     return redirect('home')
 
+
+def registerPage(request):
+    form = UserCreationForm()
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'An error occured')
+    return render(request, 'base/login_register.html', {'form': form})
+
+
 def home(request):
     context = {'books': books}
     return render(request, 'base/home.html', context)
 
+
 def rent(request):
-    return render(request,'base/rent.html')
+    return render(request, 'base/rent.html')
 
