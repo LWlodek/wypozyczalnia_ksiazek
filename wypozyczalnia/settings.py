@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig',
 ]
 
-AUTH_USER_MODEL ='base.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
