@@ -5,23 +5,25 @@
 <style>
     .home-container {
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 2fr 1fr;
     }
 </style>
 
 <div class="home-container">
     <div>
-        <h3>ABC</h3>
-        <hr>
+        <h3>Witaj w wirtualnej wypożyczalni książek</h3>
+        <p>Zaloguj się, aby wypożyczyć lub zwrócić ksiażkę</p>
     </div>
 
     <div>
-        <a href="http://127.0.0.1:8000/rent">Ksiazki</a>
+        <a>Przykładowe książki dostępne w bazie</a>
+        <hr>
         {% for book in books %}
         <div>
             <h5>{{book.id}} -- {{book.name}}</h5>
         </div>
         {% endfor %}
+        <a href="http://127.0.0.1:8000/rent">Chcę zobaczyć wszystkie</a>
 
     </div>
 </div>
