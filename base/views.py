@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
 from django.contrib import messages
+from .models import Book
 
 books = [
     {'id': 1, 'name': 'Pan tadeusz'},
@@ -21,7 +22,6 @@ def loginPage(request):
     if request.method == "POST":
         username = request.POST.get('username').lower()
         password = request.POST.get('password')
-        #tutaj na maila podmianka
         try:
             user = User.objects.get(username=username)
         except:
@@ -67,4 +67,21 @@ def home(request):
 
 def rent(request):
     return render(request, 'base/rent.html')
+
+
+def add_book(request):
+    # book = Book.objects.create(title="Potop", author="Henryk Sienkiewicz", availability=True)
+    return render(request, 'base/add_book.html')
+
+
+def rent(request):
+    return render(request, 'base/rent.html')
+
+
+def return_book(request):
+    return render(request, 'base/return_book.html')
+
+
+
+
 

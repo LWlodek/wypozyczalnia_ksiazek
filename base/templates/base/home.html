@@ -5,18 +5,18 @@
 <style>
     .home-container {
         display: grid;
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 </style>
 
 <div class="home-container">
     <div>
-        <h3>Witaj w wirtualnej wypożyczalni książek</h3>
+        <h3>Witaj w wirtualnej wypożyczalni książek.</h3>
         <p>Zaloguj się, aby wypożyczyć lub zwrócić ksiażkę</p>
     </div>
 
     <div>
-        <a>Przykładowe książki dostępne w bazie</a>
+        <p>Przykładowe książki dostępne w bazie</p>
         <hr>
         {% for book in books %}
         <div>
@@ -24,6 +24,12 @@
         </div>
         {% endfor %}
         <a href="http://127.0.0.1:8000/rent">Chcę zobaczyć wszystkie</a>
+
+    </div>
+
+    <div>
+        <a href="{% url 'rent' %}"><button>WYPOŻYCZ KSIĄŻKĘ</button><br></a>
+        <a href="{% url 'return-book' %}"><button>ZWRÓĆ KSIĄŻKĘ</button><br></a>
 
     </div>
 </div>
