@@ -3,10 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from django import forms #model do dodania ksiażki
+
 
 from django.contrib import messages
-from .models import Book
+from .models import Book, UserProfile
 from .forms import BookForm
 
 
@@ -35,6 +35,13 @@ def loginPage(request):
     return render(request, 'base/login_register.html', context)
 
 
+@login_required
+def profile(request):
+    user_profile = request.user.username
+    # context = {}
+    return render(request, 'base/profile.html', {'user_profile': user_profile})
+
+
 def logoutUser(request):
     logout(request)
     return redirect('home')
@@ -49,6 +56,8 @@ def registerPage(request):
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
+            # Tworzenie profilu użytkownika
+            # UserProfile.objects.create(user=user)
             login(request, user)
             return redirect('home')
         else:
@@ -75,10 +84,6 @@ def add_book(request):
     else:
         form = BookForm()
     return render(request, 'base/add_book.html', {'form': form})
-
-
-def rent(request):
-    return render(request, 'base/rent.html')
 
 
 def return_book(request):

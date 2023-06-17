@@ -2,13 +2,29 @@
     <h1>LOGO</h1>
 </a>
 
-{% if request.user.is_authenticated %}
+<style>
+    .navbar-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+</style>
 
-<h3><a href="{% url 'logout' %}">Logout</a></h3>
+<p>Hello {{request.user}}</p>
+<div class="navbar-container">
+    <div>
+        {% if request.user.is_authenticated %}
 
-{% else %}
+        <h3><a href="{% url 'logout' %}">Logout</a></h3>
 
-<h3><a href="{% url 'login' %}">Login</a></h3>
-{% endif %}
+        {% else %}
+
+        <h3><a href="{% url 'login' %}">Login</a></h3>
+        {% endif %}
+    </div>
+
+    <div>
+        <h3><a href="{% url 'profile' %}">Profil</a></h3>
+    </div>
+</div>
 
 <hr>
