@@ -18,12 +18,12 @@
     <div>
         <p>Przykładowe książki dostępne w bazie</p>
         <hr>
-        {% for book in books %}
+        {% for book in books|slice:":10" %}
         <div>
-            <h5>{{book.id}} -- {{book.name}}</h5>
+            <h5>{{book.id}} - {{book.title}} - {{book.author}}</h5>
         </div>
         {% endfor %}
-        <a href="http://127.0.0.1:8000/rent">Chcę zobaczyć wszystkie</a>
+        <a href="http://127.0.0.1:8000/book-list">Chcę zobaczyć wszystkie</a>
 
     </div>
 

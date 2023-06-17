@@ -3,15 +3,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+from django import forms #model do dodania ksiażki
 
 from django.contrib import messages
 from .models import Book
-
-books = [
-    {'id': 1, 'name': 'Pan tadeusz'},
-    {'id': 2, 'name': 'Pani tadeusz'},
-    {'id': 3, 'name': 'Panowie tadeusz'},
-]
+from .forms import BookForm
 
 
 def loginPage(request):
@@ -61,8 +57,9 @@ def registerPage(request):
 
 
 def home(request):
-    context = {'books': books}
-    return render(request, 'base/home.html', context)
+    # context = {'books': books}
+    available_books = Book.objects.filter(availability=True)
+    return render(request, 'base/home.html', {'books': available_books})
 
 
 def rent(request):
@@ -70,8 +67,14 @@ def rent(request):
 
 
 def add_book(request):
-    # book = Book.objects.create(title="Potop", author="Henryk Sienkiewicz", availability=True)
-    return render(request, 'base/add_book.html')
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/book-list')  # Przekierowanie po dodaniu książki
+    else:
+        form = BookForm()
+    return render(request, 'base/add_book.html', {'form': form})
 
 
 def rent(request):
@@ -82,6 +85,9 @@ def return_book(request):
     return render(request, 'base/return_book.html')
 
 
+def book_list(request):
+    available_books = Book.objects.filter(availability=True)
+    return render(request, 'base/book_list.html', {'books': available_books})
 
 
 
