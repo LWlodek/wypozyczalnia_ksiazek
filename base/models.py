@@ -24,7 +24,7 @@ class UserProfile(models.Model):
 
 class BorrowedBook(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True)
     borrowed_date = models.DateTimeField(default=timezone.now)
     due_date = models.DateTimeField()
 

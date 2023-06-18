@@ -31,7 +31,7 @@
         {% if request.user.is_superuser %}
         <a href="{% url 'add-book' %}"><button>DODAJ KSIĄŻKĘ DO BAZY</button><br></a>
         {% endif %}
-        <a href="{% url 'rent' %}"><button>WYPOŻYCZ KSIĄŻKĘ</button><br></a>
+        <a href="{% url 'borrow' %}"><button>WYPOŻYCZ KSIĄŻKĘ</button><br></a>
         <a href="{% url 'return-book' %}"><button>ZWRÓĆ KSIĄŻKĘ</button><br></a>
     </div>
 </div>

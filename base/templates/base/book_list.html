@@ -5,11 +5,12 @@
 
         <hr>
         {% for book in books %}
-        <div>
-            <h5>{{book.id}} - {{book.title}} - {{book.author}}</h5>
-        </div>
+            {% if book.availability %}
+                <div>
+                    <h5>{{book.id}} - {{book.title}} - {{book.author}}</h5>
+                </div>
+            {% endif %}
         {% empty %}
             <p>Brak dostępnych książek.</p>
         {% endfor %}
-  </form>
 {% endblock %}

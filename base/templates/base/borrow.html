@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<!--#lista książek i przycisk wypozycz?-->
+<!--#następnie zmiana availability na false,-->
+  <h2>Zaznacz, które książki chcesz wypożyczyć</h2>
+        <hr>
+
+        {% for book in books %}
+        <div>
+            <h5>{{book.id}} - {{book.title}} - {{book.author}}</h5>
+        </div>
+        {% empty %}
+            <p>Brak dostępnych książek.</p>
+        {% endfor %}
+
+{% endblock %}

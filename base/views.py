@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
@@ -41,7 +41,7 @@ def profile(request):
     # context = {}
     return render(request, 'base/profile.html', {'user_profile': user_profile})
 
-
+@login_required
 def logoutUser(request):
     logout(request)
     return redirect('home')
@@ -66,15 +66,15 @@ def registerPage(request):
 
 
 def home(request):
-    # context = {'books': books}
     available_books = Book.objects.filter(availability=True)
     return render(request, 'base/home.html', {'books': available_books})
 
+@login_required
+def borrow(request):
+    return render(request, 'base/borrow.html')
 
-def rent(request):
-    return render(request, 'base/rent.html')
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -86,6 +86,7 @@ def add_book(request):
     return render(request, 'base/add_book.html', {'form': form})
 
 
+@login_required
 def return_book(request):
     return render(request, 'base/return_book.html')
 
