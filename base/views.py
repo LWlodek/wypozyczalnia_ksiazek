@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 from django.contrib import messages
-from .models import Book, UserProfile
+from .models import Book
 from .forms import BookForm
 
 
@@ -38,8 +38,8 @@ def loginPage(request):
 @login_required
 def profile(request):
     user_profile = request.user.username
-    # context = {}
     return render(request, 'base/profile.html', {'user_profile': user_profile})
+
 
 @login_required
 def logoutUser(request):
@@ -56,8 +56,6 @@ def registerPage(request):
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
-            # Tworzenie profilu użytkownika
-            # UserProfile.objects.create(user=user)
             login(request, user)
             return redirect('home')
         else:
@@ -66,12 +64,14 @@ def registerPage(request):
 
 
 def home(request):
-    available_books = Book.objects.filter(availability=True)
-    return render(request, 'base/home.html', {'books': available_books})
+    all_books = Book.objects.all()
+    return render(request, 'base/home.html', {'books': all_books})
+
 
 @login_required
 def borrow(request):
-    return render(request, 'base/borrow.html')
+    available_books = Book.objects.filter(availability=True)
+    return render(request, 'base/borrow.html', {'books': available_books})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -88,12 +88,13 @@ def add_book(request):
 
 @login_required
 def return_book(request):
-    return render(request, 'base/return_book.html')
+    context = {}
+    return render(request, 'base/return_book.html', context)
 
 
 def book_list(request):
-    available_books = Book.objects.filter(availability=True)
-    return render(request, 'base/book_list.html', {'books': available_books})
+    all_books = Book.objects.all()
+    return render(request, 'base/book_list.html', {'books': all_books})
 
 
 

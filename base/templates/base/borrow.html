@@ -2,17 +2,34 @@
 
 {% block content %}
 
-<!--#lista książek i przycisk wypozycz?-->
+<style>
+    .book-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .book-checkbox {
+        margin-right: 10px;
+    }
+</style>
+
 <!--#następnie zmiana availability na false,-->
-  <h2>Zaznacz, które książki chcesz wypożyczyć</h2>
-        <hr>
+<div>
+    <h3>Oto dostępne obecnie ksiażki. </h3>
+    <h4>Zaznacz, które pozycje chcesz wypożyczyć</h4>
+    <hr>
 
-        {% for book in books %}
-        <div>
-            <h5>{{book.id}} - {{book.title}} - {{book.author}}</h5>
+    {% for book in books %}
+        <div class="book-item">
+            <div class="book-checkbox">
+                <input type="checkbox" name="book_ids" value="{{ book.id }}">
+            </div>
+            <h5>{{ book.id }} - {{ book.title }} - {{ book.author }}</h5>
         </div>
-        {% empty %}
-            <p>Brak dostępnych książek.</p>
-        {% endfor %}
-
+    {% empty %}
+        <p>Brak dostępnych książek.</p>
+    {% endfor %}
+</div>
+<div><a href="{%  url 'profile' %}">Wypożycz</a></div>
+<!--zmiana w bazie-->
 {% endblock %}

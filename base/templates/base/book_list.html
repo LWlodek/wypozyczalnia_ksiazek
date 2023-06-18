@@ -1,16 +1,15 @@
 {% extends 'main.html' %}
 
 {% block content %}
-  <h2>Lista książek w bazie:</h2>
-
-        <hr>
-        {% for book in books %}
-            {% if book.availability %}
-                <div>
-                    <h5>{{book.id}} - {{book.title}} - {{book.author}}</h5>
-                </div>
-            {% endif %}
-        {% empty %}
-            <p>Brak dostępnych książek.</p>
-        {% endfor %}
+<div>
+  <h2>Lista wszystkich książek w bazie:</h2>
+    <hr>
+    {% for book in books %}
+        <div>
+            <h5>{{book.id}} - {{book.title}} - {{book.author}}</h5>
+        </div>
+    {% empty %}
+        <p>Brak dostępnych książek.</p>
+    {% endfor %}
+</div>
 {% endblock %}
