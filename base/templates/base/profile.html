@@ -8,11 +8,18 @@
         grid-template-columns: 1fr 1fr;
     }
 </style>
-
+<!--powiązać model ksiazki z pozyczaniem-->
 <div class="profile-container">
     <div>
         <h3>Oto lista wypożyczonych książek</h3>
-<!--        <p>Zaloguj się, aby wypożyczyć lub zwrócić ksiażkę</p>-->
+            {% for book in books %}
+                <div>
+                    <h5>{{book.id}} - {{book.title}} - {{book.author}}
+                        - {{book.borrowed_date}} - {{book.due_date}}</h5>
+                </div>
+            {% empty %}
+                <p>Nie masz wypożyczonych książek.</p>
+            {% endfor %}
     </div>
 
     <div>

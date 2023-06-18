@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from django.contrib import messages
 from .models import Book
-from .forms import BookForm
+from .forms import BookForm, BorrowForm
 
 
 def loginPage(request):
@@ -38,7 +38,8 @@ def loginPage(request):
 @login_required
 def profile(request):
     user_profile = request.user.username
-    return render(request, 'base/profile.html', {'user_profile': user_profile})
+    borrowed_books = Book.objects.filter(user=request.user, availability=False)
+    return render(request, 'base/profile.html', {'user_profile': user_profile, 'books': borrowed_books})
 
 
 @login_required
@@ -71,7 +72,22 @@ def home(request):
 @login_required
 def borrow(request):
     available_books = Book.objects.filter(availability=True)
-    return render(request, 'base/borrow.html', {'books': available_books})
+    choices = [(book.id, f'{book.id} - {book.title} - {book.author}') for book in available_books]
+    form = BorrowForm(initial={'book_ids': choices})
+
+    if request.method == 'POST':
+        form = BorrowForm(request.POST)
+        form.fields['book_ids'].choices = choices  # Aktualizacja dostępnych wyborów w formularzu
+        if form.is_valid():
+            book_ids = form.cleaned_data['book_ids']
+            # Zmiana statusu dostępności książek na False
+            Book.objects.filter(id__in=book_ids).update(availability=False)
+            # Przypisanie wypożyczonych książek do użytkownika (wymaga dostosowania modelu)
+            return redirect('profile')  # Przekierowanie do profilu użytkownika po wypożyczeniu
+
+    return render(request, 'base/borrow.html', {'books': available_books, 'form': form})
+
+
 
 
 @user_passes_test(lambda u: u.is_superuser)

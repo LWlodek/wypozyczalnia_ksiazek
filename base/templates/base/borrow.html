@@ -19,17 +19,26 @@
     <h4>Zaznacz, które pozycje chcesz wypożyczyć</h4>
     <hr>
 
-    {% for book in books %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+
+        {% for book in books %}
         <div class="book-item">
             <div class="book-checkbox">
                 <input type="checkbox" name="book_ids" value="{{ book.id }}">
             </div>
             <h5>{{ book.id }} - {{ book.title }} - {{ book.author }}</h5>
         </div>
-    {% empty %}
-        <p>Brak dostępnych książek.</p>
-    {% endfor %}
+        {% empty %}
+            <p>Brak dostępnych książek.</p>
+        {% endfor %}
+
+        <div>
+            <button type="submit">Wypożycz</button>
+        </div>
+    </form>
+
 </div>
-<div><a href="{%  url 'profile' %}">Wypożycz</a></div>
-<!--zmiana w bazie-->
+
 {% endblock %}
