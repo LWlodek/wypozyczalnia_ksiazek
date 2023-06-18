@@ -49,6 +49,8 @@ def logoutUser(request):
 
 
 def registerPage(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     form = UserCreationForm()
 
     if request.method == 'POST':
@@ -82,12 +84,15 @@ def borrow(request):
             book_ids = form.cleaned_data['book_ids']
             # Zmiana statusu dostępności książek na False
             Book.objects.filter(id__in=book_ids).update(availability=False)
-            # Przypisanie wypożyczonych książek do użytkownika (wymaga dostosowania modelu)
-            return redirect('profile')  # Przekierowanie do profilu użytkownika po wypożyczeniu
+            # Przypisanie wypożyczonych książek do użytkownika
+            user = request.user
+            for book_id in book_ids:
+                book = Book.objects.get(id=book_id)
+                book.user = user
+                book.save()
+            return redirect('profile')
 
     return render(request, 'base/borrow.html', {'books': available_books, 'form': form})
-
-
 
 
 @user_passes_test(lambda u: u.is_superuser)

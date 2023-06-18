@@ -15,7 +15,7 @@
             {% for book in books %}
                 <div>
                     <h5>{{book.id}} - {{book.title}} - {{book.author}}
-                        - {{book.borrowed_date}} - {{book.due_date}}</h5>
+                        </h5>
                 </div>
             {% empty %}
                 <p>Nie masz wypożyczonych książek.</p>
@@ -23,7 +23,11 @@
     </div>
 
     <div>
-        <p> przyciski zwrocenia, pozyczenia?</p>
+        {% if request.user.is_superuser %}
+        <a href="{% url 'add-book' %}"><button>DODAJ KSIĄŻKĘ DO BAZY</button><br></a>
+        {% endif %}
+        <a href="{% url 'borrow' %}"><button>WYPOŻYCZ KSIĄŻKĘ</button><br></a>
+        <a href="{% url 'return-book' %}"><button>ZWRÓĆ KSIĄŻKĘ</button><br></a>
     </div>
 </div>
 
