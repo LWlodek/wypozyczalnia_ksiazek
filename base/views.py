@@ -4,9 +4,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
-
+from datetime import datetime
 from django.contrib import messages
-from .models import Book
+from .models import Book, BorrowedBook
 from .forms import BookForm, BorrowForm
 
 
@@ -80,20 +80,22 @@ def borrow(request):
     if request.method == 'POST':
         form = BorrowForm(request.POST)
         form.fields['book_ids'].choices = choices  # Aktualizacja dostępnych wyborów w formularzu
+
         if form.is_valid():
             book_ids = form.cleaned_data['book_ids']
-            # Zmiana statusu dostępności książek na False
-            Book.objects.filter(id__in=book_ids).update(availability=False)
-            # Przypisanie wypożyczonych książek do użytkownika
             user = request.user
+
             for book_id in book_ids:
                 book = Book.objects.get(id=book_id)
                 book.user = user
+                book.availability = False
+                borrowed_book = BorrowedBook.objects.create(user=user, book=book, borrowed_date=datetime.now())
                 book.save()
+                borrowed_book.save()
+
             return redirect('profile')
 
     return render(request, 'base/borrow.html', {'books': available_books, 'form': form})
-
 
 @user_passes_test(lambda u: u.is_superuser)
 def add_book(request):

@@ -17,6 +17,7 @@ class BorrowedBook(models.Model):
     user = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True, related_name='books_borrowed')
     book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True, related_name='borrowed_books')
     borrowed_date = models.DateTimeField(auto_now_add=True)
+    return_to_date = models.DateTimeField()
     returned_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
