@@ -5,7 +5,7 @@
 <style>
     .profile-container {
         display: grid;
-        grid-template-columns: 3fr 1fr;
+        grid-template-columns: 5fr 1fr;
     }
 
      .book-table {
@@ -22,6 +22,16 @@
         padding: 5px;
         border-bottom: 1px solid #ccc;
         font-weight: bold;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .button-container button {
+        width: 100%;
     }
 </style>
 <div class="profile-container">
@@ -49,7 +59,7 @@
             {% endfor %}
         </div>
     </div>
-    <div>
+    <div class="button-container">
         {% if request.user.is_superuser %}
         <a href="{% url 'add-book' %}"><button>DODAJ KSIĄŻKĘ DO BAZY</button><br></a>
         {% endif %}

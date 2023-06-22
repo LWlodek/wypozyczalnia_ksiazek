@@ -3,37 +3,49 @@
 {% block content %}
 
 <style>
-    .book-item {
-        display: flex;
-        align-items: center;
+
+    .book-table {
+        display: table;
+        width: 100%;
     }
 
-    .book-checkbox {
-        margin-right: 10px;
+    .book-row {
+        display: table-row;
+    }
+
+    .book-cell {
+        display: table-cell;
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+        font-weight: bold;
     }
 </style>
 
-<!--#następnie zmiana availability na false,-->
 <div>
-    <h3>Oto dostępne obecnie ksiażki. </h3>
-    <h4>Zaznacz, które pozycje chcesz wypożyczyć</h4>
+    <h3>Lista dostępnych obecnie ksiażek. </h3>
+    <h4>Zaznacz pozycje które chcesz wypożyczyć</h4>
     <hr>
 
     <form method="post">
         {% csrf_token %}
         {{ form }}
-
-        {% for book in books %}
-        <div class="book-item">
-            <div class="book-checkbox">
-                <input type="checkbox" name="book_ids" value="{{ book.id }}">
+        <div class="book-table">
+            <div class="book-row">
+                <div class="book-cell">Zaznacz</div>
+                <div class="book-cell">Tytuł</div>
+                <div class="book-cell">Autor</div>
             </div>
-            <h5>{{ book.id }} - {{ book.title }} - {{ book.author }}</h5>
+            {% for book in books %}
+            <div class="book-row">
+                <div class=book-cell"><input type="checkbox" name="book_ids"
+                                             value="{{ book.id }}"></div>
+                <div class="book-cell">{{book.title}}</div>
+                <div class="book-cell">{{book.author}}</div>
+            </div>
+            {% empty %}
+                <p>Brak dostępnych książek.</p>
+            {% endfor %}
         </div>
-        {% empty %}
-            <p>Brak dostępnych książek.</p>
-        {% endfor %}
-
         <div>
             <button type="submit">Wypożycz</button>
         </div>

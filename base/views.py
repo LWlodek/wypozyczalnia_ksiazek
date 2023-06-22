@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .models import Book, BorrowedBook
 from .forms import BookForm, BorrowForm
+from datetime import datetime
 
 
 def loginPage(request):
@@ -90,7 +91,6 @@ def borrow(request):
                 book.availability = False
                 borrowed_book = BorrowedBook.objects.create(user=user, book=book)
                 book.save()
-                book.save()
                 borrowed_book.save()
 
             return redirect('profile')
@@ -110,10 +110,37 @@ def add_book(request):
     return render(request, 'base/add_book.html', {'form': form})
 
 
+#pozyczenie ksiazki zaciaga razem z historią, dubluje wyniki
 @login_required
 def return_book(request):
-    context = {}
-    return render(request, 'base/return_book.html', context)
+    user = request.user
+    borrowed_books = BorrowedBook.objects.filter(user=user, book__availability=False)
+
+    choices = [(book.id, f'{book.id} - {book.book.title} - {book.book.author}') for book in borrowed_books] #?
+    form = BorrowForm(initial={'book_ids': [str(book.id) for book in borrowed_books]})
+
+    if request.method == 'POST':
+        form = BorrowForm(request.POST)
+        form.fields['book_ids'].choices = choices  # Aktualizacja dostępnych wyborów w formularzu
+
+        if form.is_valid():
+            book_ids = form.cleaned_data['book_ids']
+            returned_date = datetime.now()
+
+            for book_id in book_ids:
+                borrowed_book = BorrowedBook.objects.get(user=user, id=book_id)
+                borrowed_book.returned_date = returned_date
+                borrowed_book.save()
+                borrowed_book.book.user = None
+                borrowed_book.book.availability = True
+                borrowed_book.book.save()
+
+            return redirect('profile')
+        else:
+            form = BorrowForm(initial={'book_ids': [str(book.id) for book in borrowed_books]})
+
+    return render(request, 'base/return_book.html', {'user': user,
+                                                     'books': borrowed_books, 'form': form})
 
 
 def book_list(request):

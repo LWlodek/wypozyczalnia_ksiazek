@@ -5,7 +5,7 @@ from .models import Book
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['title', 'author', 'availability',]
+        fields = ['title', 'author', 'availability', ]
 
 
 class BorrowForm(forms.Form):
