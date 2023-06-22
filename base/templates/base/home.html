@@ -5,26 +5,48 @@
 <style>
     .home-container {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 2fr 3fr 1fr;
+    }
+
+     .book-table {
+        display: table;
+        width: 100%;
+    }
+
+    .book-row {
+        display: table-row;
+    }
+
+    .book-cell {
+        display: table-cell;
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+        font-weight: bold;
     }
 </style>
 
 <div class="home-container">
     <div>
         <h3>Witaj w wirtualnej wypożyczalni książek.</h3>
-        <p>Zaloguj się, aby wypożyczyć lub zwrócić ksiażkę</p>
+        <p>Zaloguj się, aby wypożyczyć lub zwrócić książkę</p>
     </div>
 
     <div>
         <p>Przykładowe książki dostępne w bazie</p>
         <hr>
-        {% for book in books|slice:":10" %}
-        <div>
-            <h5>{{book.id}} - {{book.title}} - {{book.author}}</h5>
+        <div class="book-table">
+            <div class="book-row">
+                <div class="book-cell">Tytuł</div>
+                <div class="book-cell">Autor</div>
+            </div>
+            {% for book in books|slice:":10" %}
+            <div class="book-row">
+                <div class="book-cell">{{ book.title }}</div>
+                <div class="book-cell">{{ book.author }}</div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
         <a href="http://127.0.0.1:8000/book-list">Chcę zobaczyć wszystkie</a>
-
     </div>
 
     <div>

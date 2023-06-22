@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
-from datetime import datetime
 from django.contrib import messages
 from .models import Book, BorrowedBook
 from .forms import BookForm, BorrowForm
@@ -38,7 +37,7 @@ def loginPage(request):
 @login_required
 def profile(request):
     user_profile = request.user.username
-    borrowed_books = Book.objects.filter(user=request.user, availability=False)
+    borrowed_books = BorrowedBook.objects.filter(user=request.user, book__availability=False)
     return render(request, 'base/profile.html', {'user_profile': user_profile, 'books': borrowed_books})
 
 
@@ -89,13 +88,15 @@ def borrow(request):
                 book = Book.objects.get(id=book_id)
                 book.user = user
                 book.availability = False
-                borrowed_book = BorrowedBook.objects.create(user=user, book=book, borrowed_date=datetime.now())
+                borrowed_book = BorrowedBook.objects.create(user=user, book=book)
+                book.save()
                 book.save()
                 borrowed_book.save()
 
             return redirect('profile')
 
     return render(request, 'base/borrow.html', {'books': available_books, 'form': form})
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def add_book(request):

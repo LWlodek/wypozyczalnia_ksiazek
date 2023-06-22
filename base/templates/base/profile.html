@@ -5,23 +5,50 @@
 <style>
     .profile-container {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 3fr 1fr;
+    }
+
+     .book-table {
+        display: table;
+        width: 100%;
+    }
+
+    .book-row {
+        display: table-row;
+    }
+
+    .book-cell {
+        display: table-cell;
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+        font-weight: bold;
     }
 </style>
-<!--powiązać model ksiazki z pozyczaniem-->
 <div class="profile-container">
     <div>
-        <h3>Oto lista wypożyczonych książek</h3>
+        <h3>Lista wypożyczonych książek</h3>
+        <hr>
+        <div class="book-table">
+            <div class="book-row">
+                <div class="book-cell">Tytuł</div>
+                <div class="book-cell">Autor</div>
+                <div class="book-cell">Data wypożyczenia</div>
+                <div class="book-cell">Termin zwrotu</div>
+            </div>
+
             {% for book in books %}
-                <div>
-                    <h5>{{book.id}} - {{book.title}} - {{book.author}}
-                        </h5>
-                </div>
+            <div class="book-row">
+                <div class="book-cell">{{book.book.title}}</div>
+                <div class="book-cell">{{book.book.author}}</div>
+                <div class="book-cell">{{book.borrowed_date}}</div>
+                <div class="book-cell">{{book.return_to_date}}</div>
+            </div>
+
             {% empty %}
                 <p>Nie masz wypożyczonych książek.</p>
             {% endfor %}
+        </div>
     </div>
-
     <div>
         {% if request.user.is_superuser %}
         <a href="{% url 'add-book' %}"><button>DODAJ KSIĄŻKĘ DO BAZY</button><br></a>
