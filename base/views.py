@@ -38,7 +38,8 @@ def loginPage(request):
 @login_required
 def profile(request):
     user_profile = request.user.username
-    borrowed_books = BorrowedBook.objects.filter(user=request.user, book__availability=False)
+    borrowed_books = BorrowedBook.objects.filter(user=request.user, book__availability=False,
+                                                 returned_date=None)
     return render(request, 'base/profile.html', {'user_profile': user_profile, 'books': borrowed_books})
 
 
@@ -110,11 +111,11 @@ def add_book(request):
     return render(request, 'base/add_book.html', {'form': form})
 
 
-#pozyczenie ksiazki zaciaga razem z historią, dubluje wyniki
 @login_required
 def return_book(request):
     user = request.user
-    borrowed_books = BorrowedBook.objects.filter(user=user, book__availability=False)
+    borrowed_books = BorrowedBook.objects.filter(user=user, book__availability=False,
+                                                 returned_date=None)
 
     choices = [(book.id, f'{book.id} - {book.book.title} - {book.book.author}') for book in borrowed_books] #?
     form = BorrowForm(initial={'book_ids': [str(book.id) for book in borrowed_books]})
@@ -130,10 +131,10 @@ def return_book(request):
             for book_id in book_ids:
                 borrowed_book = BorrowedBook.objects.get(user=user, id=book_id)
                 borrowed_book.returned_date = returned_date
-                borrowed_book.save()
                 borrowed_book.book.user = None
                 borrowed_book.book.availability = True
                 borrowed_book.book.save()
+                borrowed_book.save()
 
             return redirect('profile')
         else:
