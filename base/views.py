@@ -40,7 +40,9 @@ def profile(request):
     user_profile = request.user.username
     borrowed_books = BorrowedBook.objects.filter(user=request.user, book__availability=False,
                                                  returned_date=None)
-    return render(request, 'base/profile.html', {'user_profile': user_profile, 'books': borrowed_books})
+    borrow_history = BorrowedBook.objects.filter(user=request.user, returned_date__isnull=False)
+    return render(request, 'base/profile.html', {'user_profile': user_profile, 'books': borrowed_books,
+                  'history': borrow_history})
 
 
 @login_required

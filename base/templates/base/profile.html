@@ -58,6 +58,30 @@
                 <p>Nie masz wypożyczonych książek.</p>
             {% endfor %}
         </div>
+        <br><br><br>
+        <h3>Historia wypożyczonych książek</h3>
+        <hr>
+        <div class="book-table">
+
+            <div class="book-row">
+                <div class="book-cell">Tytuł</div>
+                <div class="book-cell">Autor</div>
+                <div class="book-cell">Data wypożyczenia</div>
+                <div class="book-cell">Data zwrotu</div>
+            </div>
+
+            {% for book in history %}
+            <div class="book-row">
+                <div class="book-cell">{{book.book.title}}</div>
+                <div class="book-cell">{{book.book.author}}</div>
+                <div class="book-cell">{{book.borrowed_date}}</div>
+                <div class="book-cell">{{book.returned_date}}</div>
+            </div>
+
+            {% empty %}
+                <p>Historia wypożyczonych książek jest pusta.</p>
+            {% endfor %}
+        </div>
     </div>
     <div class="button-container">
         {% if request.user.is_superuser %}
