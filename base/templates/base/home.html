@@ -37,9 +37,11 @@
 <div class="home-container">
     <div>
         <h3>Witaj w wirtualnej wypożyczalni książek.</h3>
-        <p>Zaloguj się, aby wypożyczyć lub zwrócić książkę</p>
+        {% if not request.user.is_authenticated %}
+            <p>Zaloguj się, aby wypożyczyć lub zwrócić książkę</p>
         <hr>
-        <p>Przykładowe książki dostępne w bazie</p>
+        {% endif %}
+        <p>Przykładowe książki dostępne w bazie:</p>
         <hr>
         <div class="book-table">
             <div class="book-row">
