@@ -45,9 +45,9 @@ def profile(request):
                   'history': borrow_history})
 
 
-@login_required
 def logoutUser(request):
-    logout(request)
+    if request.user.is_authenticated:
+        logout(request)
     return redirect('home')
 
 
@@ -119,7 +119,7 @@ def return_book(request):
     borrowed_books = BorrowedBook.objects.filter(user=user, book__availability=False,
                                                  returned_date=None)
 
-    choices = [(book.id, f'{book.id} - {book.book.title} - {book.book.author}') for book in borrowed_books] #?
+    choices = [(book.id, f'{book.id} - {book.book.title} - {book.book.author}') for book in borrowed_books]
     form = BorrowForm(initial={'book_ids': [str(book.id) for book in borrowed_books]})
 
     if request.method == 'POST':
@@ -149,6 +149,3 @@ def return_book(request):
 def book_list(request):
     all_books = Book.objects.all()
     return render(request, 'base/book_list.html', {'books': all_books})
-
-
-
